@@ -1,0 +1,418 @@
+\documentclass[a4paper]{article}
+\usepackage[14pt]{extsizes} % для того чтобы задать нестандартный 14-ый размер шрифта
+\linespread{1.3}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{indentfirst}
+\usepackage{lipsum}
+\setlength{\parindent}{4ex}
+\setlength{\parskip}{1ex}
+\usepackage{fontspec} 
+\defaultfontfeatures{Ligatures={TeX},Renderer=Basic} 
+\setmainfont[Ligatures={TeX,Historic}]{Times New Roman}
+\usepackage{setspace,amsmath}
+\usepackage[left=20mm, top=15mm, right=15mm, bottom=15mm, nohead, footskip=10mm]{geometry} % настройки полей документа
+\usepackage{tocloft}
+
+
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+	\usepackage[]{microtype}
+	\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+	\IfFileExists{parskip.sty}{%
+		\usepackage{parskip}
+	}{% else
+		\setlength{\parindent}{0pt}
+		\setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+	\KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+	pdftitle={esse},
+	pdfauthor={Lastovetsky Dmitry},
+	hidelinks,
+	pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+	\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+\usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+
+\begin{document} % начало документа
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\def\contentsname{Оглавление}
+	% НАЧАЛО ТИТУЛЬНОГО ЛИСТА
+	\begin{center}
+		\hfill \break
+		\large{МИНИСТЕРСТВО НАУКИ И ВЫСШЕГО ОБРАЗОВАНИЯ РФ}\\
+		\small{\textbf{НАЦИОНАЛЬНЫЙ ИССЛЕДОВАТЕЛЬСКИЙ УНИВЕРСИТЕТ}}\\
+		\small{\textbf{ВЫСШАЯ ШКОЛА ЭКОНОМИКИ}}\\		
+		\normalsize{Факультет социальных наук}\\
+		\normalsize{Межфакультетская кафедра общей математики}\\
+				\hfill \break
+		Эссе по курсу "Анализ категориальных данных"\\
+		\hfill\break
+		\hfill \break
+		\hfill \break
+		\hfill \break
+		\hfill \break
+
+		\large{Различия в эффектах человеческого капитала для индивидов с различным уровнем дохода на примере исследования испанских домохозяйств 2020 года}\\
+		\hfill \break
+		\hfill \break
+
+		\normalsize 
+
+		\end{center}
+		\begin{flushright}
+			Выполнил: Ластовецкий Дмитрий, БПТ191
+			
+			Преподаватель: ст.преп. Сальникова Дарья Вячеславовна
+		\end{flushright}
+		\hfill \break
+	\hfill \break
+	
+	\hfill \break
+	\hfill \break
+		\hfill \break
+	\begin{center} Москва 2022 \end{center}
+	\thispagestyle{empty} % выключаем отображение номера для этой страницы
+	
+	% КОНЕЦ ТИТУЛЬНОГО ЛИСТА
+	
+	\newpage
+	
+\tableofcontents % Вывод содержания
+
+	\newpage
+\normalsize
+\section*{Аннотация}
+\addcontentsline{toc}{section}{Аннотация}
+
+В данной работе мы пытаемся исследовать влияние переменных человеческого капитала на статус бедности, воспроизводя аналогичное и более раннее исследование Филиппа Хонга и Шанты Панди на данных из исследований бюджета испанских домохозяйств (Encuesta de Presuspuestos Familiares). Мы оценили влияния образования на вероятность попадания в категории с низким доходом при помощи порядковой логит-модели. Общие выводы модели согласуются с теоретическими положениями: повышение уровня человеческого капитала, измеряемое как уровень образования, действительно снижает вероятность попадания в категории с низким доходом.   
+\newpage
+
+\section*{Введение}
+\addcontentsline{toc}{section}{Введение}
+
+\begin{flushright}
+	\textit{Автор выражает отдельные благодарности:}
+	
+		 \textit{Хаматдиновой А. - за идею писать об Испании и многолетнюю дружбу}
+		 
+		  \textit{Воскобойникову И.Б. - за поддержку и веру в мои зачаточные академические способности}\\
+		  
+	
+	\textit{My work on human capital began with an effort to calculate both private and social rates of return to men, women, blacks, and other groups from investments in different levels of education}
+	
+	\textit{Gary Becker}
+\end{flushright}
+Теория человеческого капитала - одно из основных концептуальных достижений теоретической экономики ХХ века, которая оказала влияние как на развитие моделирования микроэкономических процессов по типу равновесия на рынке заработных плат \cite[Becker, 2009]{Beck}, так и на моделирование долгосрочного экономического роста \cite[Romer, 1990]{Rom}. С точки зрения теории человеческого капитала, инвестиции в человеческий капитал повышают уровень будущей заработной платы \cite[Becker, 2009]{Beck}. Человеческий капитал в формах образования \cite[Schultz, 1961]{Schultz}\cite[Becker, 2009]{Beck}, переобучения \cite[Gueron, 2002]{Hamilton} и здоровья \cite[Grossman, 1972]{Grossman} положительно влияет на производительность труда и экономический рост. В общем, образованные, квалифицированные и здоровые люди обычно зарабатывают больше и имеют больше шансов на восходящую социальную мобильность. 
+
+В этой связи логично предположить, что индивиды с низким уровнем человеческого капитала подвергаются большему социальному исключению и не могут претендовать на высокие заработные платы, проживая за чертой бедности. Исследование, результаты которого мы попытаемся воспроизвести \cite[Hong \& Pandey, 2008]{Hong} дает количественные оценки таким эффектам: в оцениваемой авторами мультиномиальной логистической регрессии переменные, связанные с человеческим капиталом, действительно положительно влияют на уровень дохода. 
+
+Тем не менее, теория человеческого капитала подвергается сегодня серьезной критике: можем ли мы говорить о существенном влиянии человеческого капитала на заработные платы, когда рынок перенасыщен специалистами с высшим образованием, повышение квалификации в среднем общедоступно и социальные барьеры для людей с низким уровнем здоровья всячески устраняются? В этой связи \textit{актуальна} попытка переоценки модели Хонга и Пэнди на более свежих данных. В оригинальном исследовании авторы используют массив данных исследования дохода и программ участия 1996 года. \cite[NBER, 1996]{NBER}.  Мы постараемся переоценить модель на данных 2020 года - из исследования бюджета испанских домохозяйств (Encuesta de Presuspuestos Familiares). \cite[INE, 2020]{INE}. К несчастью, в данной статистике нет данных о дополнительном образовании и здоровье домохозяйств; тем не менее, мы считаем оценку усеченной модели так же востребованной, так как уровень образования в целом является основной переменной человеческого капитала и вносила наибольший вклад в оригинальной модели. 
+
+Таким образом, \textit{цель} нашего исследования - проверить, влияет ли уровень человеческого капитала на уровень дохода. \textit{Исследовательский вопрос} состоит в том, является ли значимым влияние уровня образования на уровень дохода в Испании в 2020 году? Используемый нами \textit{метод} - логистическая модель с порядковым откликом. Гипотезы исследования следующие:
+
+\begin{itemize}
+	\item При росте уровня образования вероятность попасть в категорию с более низким доходом уменьшается;
+	\item Уровень образования является более значимым фактором в модели по сравнению с контрольными переменными - гендером, возрастом и семейным положением. 
+\end{itemize}
+
+\newpage
+	
+\section*{Обзор существующей литературы}
+\addcontentsline{toc}{section}{Обзор существующей литературы}
+В этом разделе мы попытаемся дать теоретическое обоснование того, почему инвестиции в человеческий капитал вообще могут быть связаны с уровнем дохода. Зачем людям инвестировать в переменные человеческого капитала? Достаточно очевидно, что уровень здоровья отражает ожидаемую продолжительность жизни, и, как следствие, является очевидным способом максимизации суммарной жизненной полезности, однако, инвестиции в образование или квалификацию долгое время не были свойственны человечеству в целом. 
+
+Так, в рабовладельческой Европе и Америке рабовладельцы не инвестировали в образование своих рабов \textit{вообще} \cite[Goldin, 2016]{Goldin}, что экономические историки связывают с большими возможностями кооперации и сопротивления рабству у образованных рабов.  Так как рабы обычно были представителями разных этносов и только ограниченно знали иностранные языки, они не могли адекватным образом общаться друг с другом и кооперироваться, что могло быть устранено при введении формального образования. 
+
+Так, отмена рабовладельческой системы спровоцировала рост обязательного образования в наиболее экономически развитых странах. Начальное образование охватывало более 70\% мужского населения от 5 до 14 лет в Германии, Франции и США в середине XIX века \cite[Goldin, 2016]{Goldin} и стало \textit{законодательно обязательным} в этих странах. В связи с этим возникает другой экономически значимый вопрос: зачем правительства делают образование обязательным? Почему все семейства не отдали своих детей в учебные заведения без законодательного принуждения, если существуют очевидные выгоды образования? 
+
+Наиболее прозрачный ответ предложил Гэри Бекер \cite[Becker, 2009]{Beck}. Согласно его модели, индивиды приобретают образование только в том случае, если при этом их ожидаемый дальнейший доход будет выше, чем в случае отсутствия образования, и покроет альтернативные издержки времени и средств, затраченных на обучение. Так, вместо обучения в университете индивид может работать и получать заработную плату; он согласится обучаться в университете, только если после получения образования его заработная плата будет выше и окупит обучение в университете. 
+
+В XIX веке выгоды от получения начального образования не были очевидными, в связи с чем индивиды поступали рационально и просто максимизировали ожидаемый жизненный доход. Тем не менее, это было не эффективное общественное равновесие: в XIX веке правительства европейских государств уже осознали выгоды промышленной революции, в связи с чем им было необходимо проводить образование населения для работы в промышленности и для возможности изобретения новых технологий в целом \cite[Goldin, 2016]{Goldin}. 
+
+Последующие волны технологических революций и рост симметрии информации между государством и населением только увеличили потребность в образовании, в связи с чем выводы Гэри Бекера в среднем работают и на данных даже конца ХХ века: у населения действительно есть стимулы получать более высокое образование, так как это увеличивает их потенциальный жизненный доход и покрывает издержки на получение образования \cite[Becker, 2009]{Beck}. 
+
+Значимым дополнительным вопросом в связи с теорией человеческого капитала является \textit{ловушка бедности} (англ. poverty cycle) \cite[Goldin, 2016]{Goldin}. Это стилизованный экономический факт, согласно которому бедность самовозпроизводится из-за отсутствия доступа бедных индивидов к социальным лифтам. В частности, бедным индивидам сложнее получить качественное образование, что не даёт им возможности получить более оплачиваемые должности, что, в свою очередь, не позволяет им дать доступ к качественному образованию у собственных детей. Этот стилизованный факт - основная теоретическая предпосылка нашего исследования: мы предполагаем, что индивиды с низким уровнем дохода не могли получить достаточный уровень образования, что не позволяет им сейчас занимать высокооплачиваемые должности. 
+
+Таким образом, оценивание нами модели теоретически обосновано: мы сможем проверить, насколько связан уровень образования и доход. 
+
+\newpage
+
+
+\section*{Данные}
+\addcontentsline{toc}{section}{Данные}
+
+Основной источник данных - исследование бюджета испанских домохозяйств (Encuesta de Presuspuestos Familiares), проведенное в 2020 году Национальным Статистическим Институтом Испании (Instituto Nacional de Estadística) \cite[INE, 2020]{INE}. Всего в выборке чуть более 19000 наблюдений. В качестве переменных мы используем:
+\begin{itemize}
+	\item $income$ - уровень дохода респондента. Порядковая переменная. Изменяется от 1 (менее 500 евро в месяц) до 10 (более 9000 евро в месяц). В рамках исследования мы преобразовали отклик следующим образом：
+	\begin{itemize}
+		\item[] 1 - доход респондента менее 1500 евро в месяц, что соответствует двум прожиточным минимумам в Испании (аналогичный показатель использовался в оригинальном исследовании Хонга).
+		\item[] 2 - доход респондента от 1500 до 5000 евро, что примерно соответствует средней трети зарплат в Испании. 
+		\item[] 3 - доход респондента выше 5000 евро.
+	\end{itemize}
+	\item $edu$ - уровень образования респондента. Порядковая переменная. Изменяется от 1 (респондент не умеет читать или писать или окончил менее 5 лет школьного образования) до 8 (респондент обладает докторской степенью)
+	\item $age$ - контрольная целочисленная переменная, изменяется от 1 до 9. Округленное число десятков лет респондента.  
+	\item $gender$ - контрольная бинарная переменная, обозначающая пол респондента. После преобразования 0 - мужчины, 1 - женщины. 
+	\item $ms$ - контрольная факторная переменная, обозначающая семейный статус респондента. В преобразованном нами виде 1 - респондент(ка) не состоял(а) в браке; 2 - респондент(ка) состоит в зарегистрированном браке; 3 - респондент(ка) раннее состоял(а) в браке (развод или смерть супруга). 
+	\item $child$ - контрольная целочисленная переменная, обозначающая число финансово зависимых детей. 
+	\item $hisp$ - контрольная бинарная переменная, обозначающая наличие испанского резидентства. В преобразовании 0 - респондент не является резидентом, 1 - респондент является резидентом. 
+\end{itemize}	
+Посмотрим на описательные характеристики наблюдений:
+
+\begin{longtable}[]{@{}
+		>{\centering\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.10}}
+		>{\centering\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.17}}
+		>{\centering\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.19}}
+		>{\centering\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.12}}
+		>{\centering\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.12}}
+		>{\centering\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.19}}
+		>{\centering\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.12}}@{}}
+		\caption{Описательные статистики выборки}\tabularnewline
+	\toprule
+	income & edu & age & gender & ms & child & hisp \\
+	\midrule
+	\endhead
+	1:3007 & 2 :2721 & Min. :0& 0:12784 & 1: 3783 & Min. :0 & 0:
+	57 \\
+	2:9231 & 3 :5488  & 1st Qu.:2 & 1: 6386 & 2:11243 & 1st Qu.:0 &
+	1:19113 \\
+	3:6932 &4 :3577  & Median :5 &  & 3: 4144 & Median :0 &  \\
+	 & 5 :2076 & Mean :4.49 &  &  & Mean :0.6 &  \\
+	 & 6 :1768  & 3rd Qu.:7 &  &  & 3rd Qu.:1 &  \\
+	 & 7 :2933 & Max. :9&  &  & Max. :9 &  \\
+	 & (Other): 607 &  &  &  &  &  \\
+	\bottomrule
+\end{longtable}
+	
+Выборка достаточно сбалансирована по всем переменным, кроме $hisp$. Это можно связать с характером данных: данные являются опросными, а вопрос о наличии статуса резидента является достаточно сензитивным. Тем не менее, это достаточно репрезентативные данные: действительно, в Испании мало нелегальных иммигрантов. 
+
+К несчастью, плохо сбалансированы и наблюдения по отклику $income$. Однако, это теоретически обоснованно: в Испании достаточно развиты системы государственной поддержки, что уменьшает число потенциальных респондентов с низким уровнем дохода.  
+\newpage
+\section*{Моделирование при помощи порядковой логит-модели}
+\addcontentsline{toc}{section}{Моделирование при помощи порядковой логит-модели}
+
+Для моделирования мы использовали порядковую логит-модель. В качестве отклика выступала категория дохода респондента, в качестве контрольных переменных - возраст, гендер, семейное положение, количество детей и наличие статуса резидента Испании, в качестве объясняющей переменной - категория, соответствующая уровню образования. Модель показвает отличные результаты при тесте Хосмера-Лемешова ($\chi^2 = 151.91; p_{value} < 0.001 $), что в целом означает, что модель с предикторами предсказывает отклик лучше, чем пустая модель. В нижеследующих таблицах приведены оценки параметров модели:
+
+\begin{longtable}[]{@{}
+		>{\centering\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.18}}
+		>{\centering\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.17}}
+		>{\centering\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.18}}
+		>{\centering\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.14}}@{}}
+	\caption{Коэффициенты при предкикторах}\tabularnewline
+	\toprule
+	~ & Value & Std. Error & t value \\
+	\midrule
+	\endfirsthead
+	\toprule
+	~ & Value & Std. Error & t value \\
+	\midrule
+	\endhead
+	\textbf{edu} & 0.4996 & 0.009436 & 52.95 \\
+	\textbf{age} & 0.004102 & 0.005111 & 0.8026 \\
+	\textbf{gender} & -0.7913 & 0.03183 & -24.86 \\
+	\textbf{ms} & -0.006714 & 0.0232 & -0.2894 \\
+	\textbf{child} & 0.2078 & 0.01648 & 12.61 \\
+	\textbf{hisp} & -0.2979 & 0.2656 & -1.122 \\
+	\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}
+		>{\centering\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.14}}
+		>{\centering\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.14}}
+		>{\centering\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.18}}
+		>{\centering\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.14}}@{}}
+	\caption{Intercepts}\tabularnewline
+	\toprule
+	~ & Value & Std. Error & t value \\
+	\midrule
+	\endfirsthead
+	\toprule
+	~ & Value & Std. Error & t value \\
+	\midrule
+	\endhead
+	\textbf{1\textbar2} & -0.3277 & 0.2732 & -1.2 \\
+	\textbf{2\textbar3} & 2.327 & 0.2736 & 8.504 \\
+	\bottomrule
+\end{longtable}
+
+Для удобства интерпретации преобразуем оценки в терминах отношения шансов:
+
+\begin{longtable}[]{@{}
+		>{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.12}}
+		>{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.12}}
+		>{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.12}}
+		>{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.11}}
+		>{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.12}}
+		>{\centering\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.12}}@{}}
+		\caption{отношения шансов}\tabularnewline
+	\toprule
+	edu & age & gender & ms & child & hisp \\
+	\midrule
+	\endhead
+	1.648 & 1.004 & 0.4533 & 0.9933 & 1.231 & 0.7424 \\
+	\bottomrule
+\end{longtable}
+
+
+Модель показывает, что, действительно, образование оказывает существенный эффект на доход. Так, при росте образовательной степени на единицу, шансы попасть в категорию с более высоким доходом в среднем увеличиваются примерно на 65\%. В то же время, остальные предикторы, кроме гендера, оказывают меньшее влияние: респонденты-мужчины в среднем на примерно 65\% реже попадают в категорию с более низким доходом. Проверка коэффициентов на значимость тестом Вальда показывает, что коэффициент при переменной $edu$ статистически отличен от нуля ($\chi^2 = 1208.3; p_{value} < 0.001 $).  
+
+Более детальный анализ модели с составлением confusion matrix показывает, что модель часто неверно предсказывает респондентов с наиболее низким уровнем дохода:
+
+
+\begin{longtable}[]{@{}
+		>{\centering\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.18}}
+		>{\centering\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.17}}
+		>{\centering\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.18}}
+		>{\centering\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.18}}@{}}
+	\caption{Confusion matrix}\tabularnewline
+	\toprule
+	~ & Reference 1 & Reference 2 & Reference 3 \\
+	\midrule
+	\endfirsthead
+
+	\endhead
+	\textbf{Predicted 1} & 122 & 56 & 6 \\
+	\textbf{Predicted 2} & 2584 & 7139 & 3435 \\
+	\textbf{Predicted 3} & 301 & 2036 & 3491 \\
+
+	\bottomrule
+\end{longtable}
+\begin{longtable}[]{@{}
+		>{\centering\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.18}}
+		>{\centering\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.17}}
+		>{\centering\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.18}}
+		>{\centering\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.18}}@{}}
+	\caption{Метрики качества confusuion matrix}\tabularnewline
+	\toprule
+	~ & Sensitivity & Specificity  & Balanced Accuracy \\
+	\midrule
+	\endfirsthead
+	
+	\endhead
+	\textbf{Class 1} & 0.04057 & 0.9962 & 0.5184 \\
+	\textbf{Class 2} & 0.7734 & 0.3944 & 0.5839 \\
+	\textbf{Class 3} & 0.5036 & 0.809 & 0.6563 \\	
+	\bottomrule
+\end{longtable}
+
+О том, как можно попробовать решить эту проблему, мы попытаемся сказать в заключении. На данный момент кратко скажем, что, возможно, группировка респондентов по уровню дохода, предложенная в оригинальной статье, была не самой удачной, и необходима более точная группировка и более точные данные. Также можно сказать, что возможно, необходимы дополнительные преобразования предиктора или попытки искусственно сбалансировать выборку. 
+
+Тем не менее, модель обладает неплохими характеристиками общей точности ($Accuracy = 0.5609$ с доверительным интервалом $[0.5538; 0.5679]$ против $0.4815$ у пустой модели). 
+
+Таким образом, уровень образования действительно оказывает положительный эффект на доход. 
+\newpage
+\section*{Заключение}
+\addcontentsline{toc}{section}{Заключение}
+
+В предложенной работе мы показали, что рост уровня образования действительно снижает вероятность оказаться в категории с более низким доходом, что подтверждает общие теоретические предположения теории человеческого капитала и согласуется с предположением о положительной отдачей от образования. Модель показала, что образование является одним из наиболее важных факторов при объяснении разброса уровня дохода, более важным, чем стандартные контрольные факторы для моделей, объясняющих неравенство. 
+
+Тем не менее, наша модель столкнулась с рядом проблем: она неудовлетворительно прогнозирует результаты для индивидов с наиболее низким доходом. Для устранения этой проблемы мы можем предложить следующие варианты:
+
+\begin{itemize}
+	\item Перегруппировать население иначе в соответствии с уровнем дохода. Можно оценить стандартную линейную модель на изначальных категориях респондентов или предложить другую группировку, возможно, с большим или меньшим числом категорий. 
+	\item Предложить другой характер связи между откликом и предиктором. К примеру, использовать в качестве предиктора квадрат числа полных лет образования. 
+	\item Последовать логике оригинального исследования и переоценить модель с бинарным откликом (где отклик - вероятность оказаться в категории с доходом ниже уровня бедности) и мультиномиальным откликом (в предположении об отсутствии отношений порядка между категориями отклика)
+\end{itemize}
+
+Исследование также можно расширить, введя панельную структуру данных и анализируя модели с включением временной динамики, или введя дополнительные иерархические единицы, к примеру, регионы Испании как переменные более высокого уровня. 
+\newpage
+\addcontentsline{toc}{section}{Список литературы}
+\begin{thebibliography}{20}
+	
+\bibitem{NBER} Survey of Income and Program Participation (SIPP). Date Views: 01.06.2022. URL:   www.nber.org/research/data/survey-income-and-program-participation-sipp
+
+\bibitem{INE} Instituto Nacional de Estadística. Date Views: 01.06.2022. URL: https://ine.es/.
+
+\bibitem{Beck} Becker, G. S. (2009). Human capital: A theoretical and empirical analysis, with special reference to education. University of Chicago press. 
+
+\bibitem{Goldin} Goldin, Claudia. 2016. "Human Capital." In Handbook of Cliometrics, ed. Claude Diebolt and Michael Haupert, 55-86. Heidelberg, Germany: Springer Verlag.
+
+\bibitem{Hamilton} Gueron, J. M., \& Hamilton, G. (2002). The role of education and training in welfare reform. Washington, DC: Brookings Institution.
+
+\bibitem{Grossman} Grossman, M. (1972) On the concept of health capital and the demand for health. J. Polit. Econ. 80(2), 223–255.
+
+\bibitem{Hong} Hong, P. Y. P., \& Pandey, S. (2008). Differential effects of human capital on the poor and near-poor: Evidence of social exclusion. Journal of Poverty, 12(4), 456-480.
+
+\bibitem{Rom} Romer, P. M. (1990). Endogenous technological change. Journal of political Economy, 98(5, Part 2), S71-S102. 
+
+\bibitem{Schultz} Schultz, T.W. (1961). Investment in human capital. American Economic Review, 161:1-17. 
+
+
+\end{thebibliography}
+\end{document}  % КОНЕЦ ДОКУМЕНТА !
+
