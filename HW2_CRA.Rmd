@@ -1,0 +1,157 @@
+---
+title: "ДЗ 3"
+output: html_notebook
+---
+```{r}
+#install.packages("foreign")
+#install.packages("data.table")
+#install.packages("mlogit")
+#install.packages("nnet")
+#install.packages("aod")
+#install.packages("lmtest")
+#install.packages("glm.predict")
+#install.packages("stargazer")
+#install.packages("reshape2")
+
+
+library(foreign)
+library(data.table)
+library(mlogit)
+library(nnet)
+library(aod)
+library(lmtest)
+library(glm.predict)
+library(stargazer)
+library(ggplot2)
+library(reshape2)
+library(Rcpp)
+```
+Задание 1
+
+```{r}
+data_mlog <- read.dta(file.choose())
+data_mlogit <- data.frame(party = data_mlog$party, age = data_mlog$age, educ = data_mlog$educ, relig = data_mlog$relig, income = data_mlog$income, union = data_mlog$union)
+data_mlogit <- na.omit(data_mlogit)
+
+data_mlogit$relig[data_mlogit$relig == 2] <- 0
+data_mlogit$party[data_mlogit$party == 0] <- "PvdA"
+data_mlogit$party[data_mlogit$party == 1] <- "CDA"
+data_mlogit$party[data_mlogit$party == 2] <- "VVD"
+data_mlogit$party[data_mlogit$party == 3] <- "D66"
+
+long <- mlogit.data(data_mlogit, shape="wide", choice="party")
+```
+Задание 2
+
+```{r}
+mlogit_PvdA <- mlogit(party ~ 0 | age + educ + relig + income, data=long, reflevel="PvdA")
+summary(mlogit_PvdA) 
+wald.test(b = coef(mlogit_PvdA), Sigma = vcov(mlogit_PvdA), Terms = c(4, 7, 10,  13))  # 0 - 1
+wald.test(b = coef(mlogit_PvdA), Sigma = vcov(mlogit_PvdA), Terms = c(5, 8, 11,  14))  # 0 - 2
+wald.test(b = coef(mlogit_PvdA), Sigma = vcov(mlogit_PvdA), Terms = c(6, 9, 12,  15))  # 0 - 3
+
+```
+Для всех попарных сравнений партий с базовой категорией (PvdA) пи-вэлью в тесте Вальда меньше критического уровня (0.05), значит, мы не можем принять нулевую гипотезу о необходимости объединения альтернатив. 
+
+Задание 3. 
+Для ответа на вопрос используем likelihood-ratio test. 
+
+```{r}
+mlogit_PvdA_wu <- mlogit(party ~ 0 | age + educ + relig + income + union, data=long, reflevel="PvdA")
+summary(mlogit_PvdA_wu)
+lrtest(mlogit_PvdA_wu, mlogit_PvdA)
+
+```
+P-value теста равно 2.735e-10, что меньше критического уровня в 0.05. Значит, мы отвергаем нулевую гипотезу и предпочитаем более сложную модель (mlogit_PvdA_wu). 
+
+Задание 4. 
+
+```{r}
+summary(mlogit_PvdA_wu)
+exp <- round(exp(coef(mlogit_PvdA_wu)), 3)
+exp
+```
+Для CDA относительно PvdA:
+0. intercept При равенстве всех предикторов нулю риск того, что респондент предпочтет CDA PvdA ниже на 94%. 
+1. age Если возраст респондента увеличивается на одну единицу (в срденем три года, судя по описанию данных), риск того, что он предпочтет CDA относительно PvdA увеличивается в среднем на 3.4% при прочих равных. 
+2. educ Если уровень образования респондента повышается со среднего до высшего , риск того, что он предпочтет CDA относительно PvdA увеличивается в среднем на 23.4% при прочих равных. 
+3. relig Если респондент религиозен, то риск того, что он предпочитает CDA относительно PvdA увеличивается в среднем в 9.668 раз при прочих равных по сравнению с нерелигиозными. 
+4. income Если респондент переходит в следующую категорию дохода, то риск того, что он предпочитает CDA относительно PvdA увеличивается в среднем на 29.5% при прочих равных по сравнению с респондентами из предыдущей категорий дохода. 
+5. union Если респондент состоит в профсоюзе, то риск того, что он предпочитает CDA относительно PvdA падает в среднем на 62.4% при прочих равных по сравнению с респондентами, не состоящими в профсоюзе. 
+
+Для VVD относительно PvdA:
+0. intercept При равенстве всех предикторов нулю риск того, что респондент предпочтет VVD PvdA ниже на 98%. 
+1. age Если возраст респондента увеличивается на одну единицу (в срденем три года, судя по описанию данных), риск того, что он предпочтет VVD относительно PvdA падает в среднем на 12% при прочих равных. 
+2. educ Если уровень образования респондента повышается со среднего до высшего , риск того, что он предпочтет VVD относительно PvdA увеличивается в среднем на 68.1% при прочих равных. 
+3. relig Если респондент религиозен, то риск того, что он предпочитает CDA относительно PvdA увеличивается в среднем в на 71.3% при прочих равных по сравнению с нерелигиозными. 
+4. income Если респондент переходит в следующую категорию дохода, то риск того, что он предпочитает VVD относительно PvdA увеличивается в среднем на 60.3% при прочих равных по сравнению с респондентами из предыдущей категорий дохода. 
+5. union Если респондент состоит в профсоюзе, то риск того, что он предпочитает VVD относительно PvdA падает в среднем на 77.7% при прочих равных по сравнению с респондентами, не состоящими в профсоюзе. 
+
+Для d66 относительно PvdA:
+0. intercept При равенстве всех предикторов нулю риск того, что респондент предпочтет D66 PvdA ниже на 92%. 
+1. age Если возраст респондента увеличивается на одну единицу (в срденем три года, судя по описанию данных), риск того, что он предпочтет D66 относительно PvdA увеличивается в среднем на 0.6% при прочих равных. 
+2. educ Если уровень образования респондента повышается со среднего до высшего , риск того, что он предпочтет D66 относительно PvdA увеличивается в среднем на 103% при прочих равных. 
+3. relig Если респондент религиозен, то риск того, что он предпочитает D66 относительно PvdA увеличивается в среднем в на 46.6% при прочих равных по сравнению с нерелигиозными. 
+4. income Если респондент переходит в следующую категорию дохода, то риск того, что он предпочитает D66 относительно PvdA увеличивается в среднем на 25.3% при прочих равных по сравнению с респондентами из предыдущей категорий дохода. 
+5. union Если респондент состоит в профсоюзе, то риск того, что он предпочитает D66 относительно PvdA падает в среднем на 50% при прочих равных по сравнению с респондентами, не состоящими в профсоюзе. 
+
+
+Задание 5. 
+
+```{r}
+multilogit <- multinom(party ~ age + educ + relig + income + union, data=data_mlogit, reflevel="PvdA")
+summary(multilogit)
+dc(multilogit, 
+   values1 = c(1, 1, 1, 0, 1, 1), 
+   values2 = c(1, 1, 1, 1, 1, 1))
+dc(multilogit, 
+   values1 = c(1, 1, 1, 0, 1, 1), 
+   values2 = c(1, 5, 1, 0, 1, 1))
+```
+У религиозных респондентов с зафиксированными прочими показателями (age = 1, educ = 1, income = 1, union = 1) вероятность проголосовать за PvdA в среднем на 0.21 выше；за CDA на примерно 0.2 ниже; за VVB на 0.004 ниже; за D66 на 0.06 ниже. 
+
+У респондентов с высшим образованием с зафиксированными прочими показателями вероятность проголосовать за PvdA в среднем на 0.025 ниже, за CDA - на 0.005 ниже, за VVB на 0.0005 ниже, за D66 на 0.0311 выше. 
+
+Задание 6. 
+
+```{r}
+
+
+summary(data_mlogit$age)
+summary(data_mlogit$educ)
+
+desr0e1 <- data.frame(age = 1:13, educ = 5, relig = 0,  income = mean(data_mlogit$income),  union = 0)
+desr1e1 <- data.frame(age = 1:13, educ = 5, relig = 1,  income = mean(data_mlogit$income),  union = 0)
+desr0e0 <- data.frame(age = 1:13, educ = 0, relig = 0,  income = mean(data_mlogit$income),  union = 0)
+desr1e0 <- data.frame(age = 1:13, educ = 0, relig = 1,  income = mean(data_mlogit$income),  union = 0)
+
+des <- rbind(desr0e1, desr1e1, desr0e0, desr1e0 )
+des
+
+pr <- predict(multilogit, des, "prob")
+des <- cbind(des, pr)
+head(des)
+melt <- melt(des, measure.vars = 6:9, value.name = "probability")
+ggplot(melt, aes(x = age, y = probability, colour = factor(relig))) + 
+  geom_line() + facet_grid(variable~., scales = "free_y") + theme_bw()
+ggplot(melt, aes(x = age, y = probability, colour = factor(educ))) + 
+  geom_line() + facet_grid(variable~., scales = "free_y") + theme_bw()
+```
+Графики показывают, что, действительно, возраст является значимым фактором для групп, выделенных по уровню образования и по отношению к религии. 
+
+Задание 7. 
+
+```{r}
+alt.withoutd66 <- c("PvdA", "CDA", "VVD") 
+alt.withoutvvd <- c("PvdA", "CDA", "D66") 
+alt.withoutcda <- c("PvdA", "VVD", "D66") 
+
+
+hmftest(mlogit_PvdA_wu, alt.withoutd66) 
+hmftest(mlogit_PvdA_wu, alt.withoutvvd )
+hmftest(mlogit_PvdA_wu, alt.withoutcda ) 
+
+```
+Тест Хаусман-Макфаден предполагает переоценку модели без определенной категории, за нулевую гипотезу в нем принимается гипотза о независимости от посторонних альтернатив. 
+
+Так как для каждого тестирования с исключением соответствующей альтернативы тест Хаусман-Макфаден дает пи-вэлью выше критического уровня значимости (даже в 0.1), мы можем принять нулевую гипотезу о независимости от посторонних альтернатив. 

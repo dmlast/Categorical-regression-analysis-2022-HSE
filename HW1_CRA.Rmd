@@ -1,0 +1,161 @@
+---
+title: "АКД ДЗ 1"
+author: "Ластовецкий Дмитрий"
+lang: ru-RU
+output:
+  html_document:
+    df_print: paged
+---
+### Задание 1
+В качестве предикторов я выбрал следующие:
+a. Возраст (age) - непрерывная
+б. Пол (gender) - дамми (0 - женский, 1 - мужской)
+в. Уровень образования (edu) - номинальная 
+г. Одобрение или неодобрения деятельности президента (MEDVEDEV) - дамми (0 - неодобрение)
+д. Одобрение или неодобрение деятельности премьера (PUTIN) - дамми (0 - неодобрение)
+
+Отклик я также пробразовал (0 - не участвовал, 1 - участвовал)
+```{r, cache=FALSE, error=FALSE, echo=FALSE}
+#install.packages("stargazer")
+library(stargazer)
+library(haven) 
+library(dplyr)
+library(ggplot2)
+library(glm.predict)
+library(questionr)
+library(erer)
+library(ResourceSelection)
+library(caret)
+library(epiDisplay)
+library(InformationValue)
+library(pscl)
+library(ROCR)
+library(aod)
+library(lmtest)
+data <- read_dta(file = "https://politstatistics.github.io/CDAhw1.dta")
+datat <- data.frame(PRTCPTN = (data$q29-2)^2, age = data$qS2 , gender = (data$qS1-2)^2, edu = data$qS3, MEDVEDEV = (data$q4A-2)^2, PUTIN = (data$q4B-2)^2) 
+datat <- na.omit(datat)
+summary(datat)
+stargazer(datat, type='text', summary=T)
+
+```
+
+Приведённые дескриптивные статистики показывают, что респонденты достаточно поляризованы в отношении к президенту и премьеру, средниё возраст опрошенных 44 года, опрошенные чаще уствовали в выборах. 
+
+### Задание 2
+
+```{r, cache=FALSE, error=FALSE, echo=FALSE}
+m1_logit <- glm( PRTCPTN ~ gender + age + edu + MEDVEDEV + PUTIN, data = datat,  x = TRUE, family = binomial(link = "logit"))
+stargazer(m1_logit, type='text', summary=T)
+```
+Данную переменную можно проинтерпретировать как склонность к голосованию. Оценки коэффициентов: 
+
+При росте возраста на единицу склонность пойти на выборы возрастает в среднем на 0.03 при прочих равных. 
+При росте уровня образования на единицу в обозначенной шкале склонность пойти на выборы возрастает в среднем на 0.1 при прочих равных. 
+У респондентов-мужчин склонность пойти на выборы в среднем на 0.23 ниже, чем у респонденток-женщин при прочих равных. 
+У респондентов, одобряющих деятельность президента, склонность пойти на выборы в среднем на 0.43 выше, чем у неодобряющих, при прочих равных. 
+У респондентов, одобряющих деятельность премьера, склонность пойти в среднем на выборы на 0.16 выше, чем у неодобряющих, при прочих равных. 
+
+### Задание 3
+
+```{r, cache=FALSE, error=FALSE, echo=FALSE}
+m1_probit <- glm(PRTCPTN ~ gender + age + edu + MEDVEDEV + PUTIN, data = datat,  x = TRUE, family = binomial(link = "probit"))
+stargazer(m1_probit, type='text', summary=T)
+
+```
+При росте возраста на единицу склонность пойти на выборы возрастает в среднем на 0.02 при прочих равных. 
+При росте уровня образования на единицу в обозначенной шкале склонность пойти на выборы возрастает в среднем на 0.06 при прочих равных. 
+У респондентов-мужчин склонность пойти на выборы в среднем на 0.14 ниже, чем у респонденток-женщин при прочих равных. 
+У респондентов, одобряющих деятельность президента, склонность пойти на выборы в среднем на 0.26 выше, чем у неодобряющих, при прочих равных. 
+У респондентов, одобряющих деятельность премьера, склонность пойти в среднем на выборы на 0.1 выше, чем у неодобряющих, при прочих равных. 
+
+
+Оценки коэффициентов в логит- и пробит- моделях сохраняют отношения порядка и в целом достаточно равнозначны. Оценки соотносятся константно и сохраняют схожие уровни значимости. 
+
+### Задание 4
+
+```{r, cache=FALSE, error=FALSE, echo=FALSE}
+stargazer(maBina(m1_logit, x.mean = FALSE), type = "text")# marginal effects are calculated for each observation and then averaged
+```
+При увеличении образования по заданной шкале на малое изменение отклик в среднем возрастает на 0.2. 
+При увеличении возраста на малое изменение отклик в среднем возрастает на 0.006. 
+
+### Задание 5
+
+```{r, cache=FALSE, error=FALSE, echo=FALSE}
+dc(m1_logit, values1 = c(1, 1, mean(datat$age), mean(datat$edu), 0, 0),
+   values2 = c(1, 0, mean(datat$age), mean(datat$edu), 0, 0))
+```
+Респонденты-мужчины среднего возраста и уровня образования, не поддерживающих действия президента и премьера, участвуют в выборах реже, чем респонденты-женщины с такими же демографическими характеристиками, в среднем на 6 процентных пунктов. 
+
+### Задание 6
+
+```{r, cache=FALSE, error=FALSE, echo=FALSE}
+odds.ratio(m1_logit, level = 0.95, signif.stars = T)
+
+```
+У мужчин выборки шансы участвовать в выборах в среднем на 21 процент ниже, чем у женщин, при прочих равных.
+При увеличении возраста на 1 шансы участвовать в выборах повышаются на 3 процента. 
+При росте образования на 1 по заданной шкале шансы участвовать в выобрах повышаются в среднем на 10 процентов. 
+У людей, поддерживающих Медведева, шанс участвовать в выборах на 55 процентов выше, чем у неподдерживающих. 
+У людей, поддерживающих Путина, шанс участвовать в выборах на 17 процентов выше, чем у неподдерживающих. 
+(везде при прочих равных)
+### Задание 7
+```{r, cache=FALSE, error=FALSE, echo=FALSE}
+hl <- hoslem.test(m1_logit$y, fitted(m1_logit), g=10)
+hl
+```
+На основании теста нельзя сделать выводы о плохой подгонке модели (p-val 0.84)
+Тест согласия Хосмера-Лемешова показывает качество подгонки модели на основе децильных оценок, используя критерий Хи-квадрат. 
+
+### Задание 8
+```{r, cache=FALSE, error=FALSE, echo=FALSE}
+pred <- predict(m1_logit, datat, type='response')
+pred.inf <- prediction(pred, datat$PRTCPTN)
+sens <- performance(pred.inf,  measure="sens", x.measure="cutoff")
+spec <- performance(pred.inf,  measure="spec", x.measure="cutoff")
+mindiff <- which.min(abs(sens@y.values[[1]]-spec@y.values[[1]]))
+
+pred1 <- ifelse(predict(m1_logit, type = "response") < sens@x.values[[1]][mindiff], 0, 1)
+pred1 <- as.factor(pred1)
+datat$m <- as.factor(datat$PRTCPTN)
+caret::confusionMatrix(pred1, datat$m, positive= "1")
+cutoff <- optimalCutoff(datat$PRTCPTN, pred, optimiseFor = "Ones")  # maximizes detection of "Ones"
+cutoff
+pred3 <- ifelse(predict(m1_logit, type = "response") < cutoff, 0, 1)
+pred3 <- as.factor(pred3)
+caret::confusionMatrix(pred3, datat$m, positive = "1")
+```
+```{r, cache=FALSE, error=FALSE, echo=FALSE}
+data.frame(table(datat$PRTCPTN))
+max(data.frame(table(datat$PRTCPTN))[,2])/sum(data.frame(table(datat$PRTCPTN))[,2])
+```
+Я использовал cutoff, максимизирующий специфичность. 
+Accuracy модели, масимизирующей специфичность, ниже, чем у бейслайна, поэтому предпочесть такую модель сложно. 
+
+### Задание 9
+```{r, cache=FALSE, error=FALSE, echo=FALSE}
+cutoff <- optimalCutoff(datat$PRTCPTN, pred) # by default minimizes the misclassification error
+cutoff
+misClassError(datat$PRTCPTN, pred, threshold = cutoff)
+pred2 <- ifelse(predict(m1_logit, type = "response") < cutoff, 0, 1)
+pred2 <- as.factor(pred2)
+caret::confusionMatrix(pred2, datat$m, positive = "1")
+
+```
+В модели, минимизирующем ошибку классификации, выше accuracy, выше специфичнось и ниже чувствительность. В связи с этим разумно предпочесть модель с минимизацией ошибки, так как значения чувствительности в первой модели по очевидным причинам завышены и в целом не очень разумны. 
+
+### Задание 10
+```{r, cache=FALSE, error=FALSE, echo=FALSE}
+mlogitaaa<- glm(PRTCPTN ~ gender + age + edu + MEDVEDEV, data = datat,  x = TRUE, family = binomial(link = "logit"))
+lrtest(m1_logit, mlogitaaa)
+
+```
+Сравним модели с переменной PUTIN и без. 
+P-value равно 0.4, в связи с чем мы не можем отвергать нулевую гипотезу, и модели оценивают предикторы примерно одинаково. Значит, мы должны предпочесть более экономную модель. 
+```{r, cache=FALSE, error=FALSE, echo=FALSE}
+
+wald.test(b = m1_logit$coefficients, Sigma = vcov(m1_logit), Terms = 4) 
+```
+Критерий Вальда показывает, что p-val ниже 0.01. Значит, мы не можем принять нулевую гипотезу. 
+Содержательно это говорит о том, что отклонения порядковой переменной от базовой категории статистически значимы, и, как следствие, уровень образования влияет на участие в выборах. 
